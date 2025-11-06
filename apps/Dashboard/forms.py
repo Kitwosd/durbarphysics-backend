@@ -1,0 +1,229 @@
+from django import forms
+from apps.Course.models import User
+from django.contrib.auth.forms import UserCreationForm
+
+class UserSignUpForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'password1', 'password2', 'role', 'phone', 'profile_picture', 'first_name', 'last_name']
+        # widgets = {
+        #     'bio': forms.Textarea(attrs={'rows': 3}),
+        # }
+
+class UserLoginForm(forms.Form):
+    username = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'Username'}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'Password'}))
+
+
+from apps.Course.models import AcademicLevel, Stream, Subject, Enrollment, LiveClass, ExtraCurricularActivity, Video, User
+
+# ============================================
+# USER FORMS
+# ============================================
+class UserForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'role', 'phone', 
+                  'bio', 'profile_picture', 'academic_level']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-select'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control', 'placeholder': '+977-9876543210'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'academic_level': forms.Select(attrs={'class': 'form-select'}),
+        }
+        help_texts = {
+            'username': 'Required. 150 characters or fewer.',
+            'role': 'Select user role (Student requires academic level)',
+            'academic_level': 'Required only for students'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Make academic_level required only for students
+        self.fields['academic_level'].required = False
+
+
+class UserCreateForm(UserCreationForm):
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email', 'password1', 
+                  'password2', 'role', 'phone', 'profile_picture', 'academic_level']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'role': forms.Select(attrs={'class': 'form-select'}),
+            'phone': forms.TextInput(attrs={'class': 'form-control'}),
+            'profile_picture': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'academic_level': forms.Select(attrs={'class': 'form-select'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields['password1'].widget.attrs.update({'class': 'form-control'})
+        self.fields['password2'].widget.attrs.update({'class': 'form-control'})
+
+
+# ============================================
+# ACADEMIC LEVEL FORM
+# ============================================
+class AcademicLevelForm(forms.ModelForm):
+    class Meta:
+        model = AcademicLevel
+        fields = ['name', 'slug', 'order', 'allows_streams', 'capacity']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Grade 10'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., grade-10'}),
+            'order': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+            'allows_streams': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'capacity': forms.NumberInput(attrs={'class': 'form-control', 'min': 1}),
+        }
+        help_texts = {
+            'slug': 'URL-friendly identifier (use hyphens)',
+            'order': 'Lower numbers appear first',
+            'allows_streams': 'Check if this level has streams (Science, Management, etc.)',
+            'capacity': 'Maximum students (leave empty for unlimited)'
+        }
+
+
+# ============================================
+# STREAM FORM
+# ============================================
+class StreamForm(forms.ModelForm):
+    class Meta:
+        model = Stream
+        fields = ['name', 'slug', 'level']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Science'}),
+            'slug': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., science'}),
+            'level': forms.Select(attrs={'class': 'form-select'}),
+        }
+        help_texts = {
+            'level': 'Select an academic level that allows streams'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Filter to only show levels that allow streams
+        self.fields['level'].queryset = AcademicLevel.objects.filter(allows_streams=True)
+
+
+# ============================================
+# SUBJECT FORM
+# ============================================
+class SubjectForm(forms.ModelForm):
+    class Meta:
+        model = Subject
+        fields = ['name', 'description', 'levels', 'streams']
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Mathematics'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'levels': forms.Select(attrs={'class': 'form-select'}),
+            'streams': forms.SelectMultiple(attrs={'class': 'form-select', 'size': '5'}),
+        }
+        help_texts = {
+            'streams': 'Hold Ctrl/Cmd to select multiple streams (optional)'
+        }
+
+
+# ============================================
+# ENROLLMENT FORM
+# ============================================
+class EnrollmentForm(forms.ModelForm):
+    class Meta:
+        model = Enrollment
+        fields = ['student', 'level', 'joined_at', 'is_active']
+        widgets = {
+            'student': forms.Select(attrs={'class': 'form-select'}),
+            'level': forms.Select(attrs={'class': 'form-select'}),
+            'joined_at': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'is_active': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show students
+        self.fields['student'].queryset = User.objects.filter(role=User.Role.STUDENT)
+
+
+# ============================================
+# LIVE CLASS FORM
+# ============================================
+class LiveClassForm(forms.ModelForm):
+    class Meta:
+        model = LiveClass
+        fields = ['title', 'level', 'subject', 'hosts', 'start_time', 'end_time', 
+                  'meeting_url', 'description', 'is_recorded', 'recording_url']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Introduction to Calculus'}),
+            'level': forms.Select(attrs={'class': 'form-select'}),
+            'subject': forms.Select(attrs={'class': 'form-select'}),
+            'hosts': forms.Select(attrs={'class': 'form-select'}),
+            'start_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'end_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'meeting_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://zoom.us/j/...'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'is_recorded': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'recording_url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show teachers as hosts
+        self.fields['hosts'].queryset = User.objects.filter(role=User.Role.TEACHER)
+
+
+# ============================================
+# EXTRA CURRICULAR ACTIVITY FORM
+# ============================================
+class ExtraCurricularActivityForm(forms.ModelForm):
+    class Meta:
+        model = ExtraCurricularActivity
+        fields = ['title', 'description', 'start_time', 'end_time', 'image', 'participants']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Annual Sports Day'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 4}),
+            'start_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'end_time': forms.DateTimeInput(attrs={'class': 'form-control', 'type': 'datetime-local'}),
+            'image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+            'participants': forms.SelectMultiple(attrs={'class': 'form-select', 'size': '8'}),
+        }
+        help_texts = {
+            'participants': 'Hold Ctrl/Cmd to select multiple participants (optional)'
+        }
+
+
+# ============================================
+# VIDEO FORM
+# ============================================
+class VideoForm(forms.ModelForm):
+    class Meta:
+        model = Video
+        fields = ['title', 'description', 'url', 'level', 'subject', 'stream', 
+                  'teacher', 'cost', 'image']
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'e.g., Algebra Basics'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3}),
+            'url': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://youtube.com/...'}),
+            'level': forms.Select(attrs={'class': 'form-select'}),
+            'subject': forms.Select(attrs={'class': 'form-select'}),
+            'stream': forms.SelectMultiple(attrs={'class': 'form-select', 'size': '5'}),
+            'teacher': forms.Select(attrs={'class': 'form-select'}),
+            'cost': forms.NumberInput(attrs={'class': 'form-control', 'min': 0, 'step': '0.01'}),
+            'image': forms.FileInput(attrs={'class': 'form-control', 'accept': 'image/*'}),
+        }
+        help_texts = {
+            'cost': 'Enter 0 for free videos',
+            'stream': 'Hold Ctrl/Cmd to select multiple streams (optional)'
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # Only show teachers
+        self.fields['teacher'].queryset = User.objects.filter(role=User.Role.TEACHER)

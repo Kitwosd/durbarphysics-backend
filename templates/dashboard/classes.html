@@ -1,0 +1,92 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block title %}Course
+Management{% endblock %} {% block content %}
+<div class="app-wrapper">
+  <div class="app-content pt-3 p-md-3 p-lg-4">
+    <div class="container-xl">
+      <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="app-page-title mb-0">Level : {{ level.name }}</h1>
+        <div class="d-flex align-items-center gap-3">
+          <form class="table-search-form row gx-1 align-items-center">
+            <div class="col-auto">
+              <input
+                type="text"
+                id="search-orders"
+                name="searchorders"
+                class="form-control search-orders"
+                placeholder="Search"
+              />
+            </div>
+            <div class="col-auto">
+              <button type="submit" class="btn app-btn-secondary">
+                Search
+              </button>
+            </div>
+          </form>
+          <a
+            class="btn app-btn-primary text-nowrap"
+            href="{% url 'add_academic_level' %}"
+            >Create New Class</a
+          >
+        </div>
+      </div>
+
+      <div class="tab-content" id="orders-table-tab-content">
+        <div
+          class="tab-pane fade show active"
+          id="orders-all"
+          role="tabpanel"
+          aria-labelledby="orders-all-tab"
+        >
+          <div class="app-card app-card-orders-table shadow-sm mb-5">
+            <div class="app-card-body">
+              <div class="table-responsive">
+                <table class="table app-table-hover mb-0 text-left">
+                  <thead>
+                    <tr>
+                      <th class="cell">S.N</th>
+                      <th class="cell">Name</th>
+                      <th class="cell">Username</th>
+                      <th class="cell">Phone</th>
+                      <th class="cell">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for user in level_users %}
+                    <tr>
+                      <td class="cell">{{forloop.counter}}</td>
+                      <td class="cell">
+                        <span class="truncate"
+                          >{{user.first_name}} {{user.last_name}}</span
+                        >
+                      </td>
+                      <td class="cell">{{user.username}}</td>
+                      <td class="cell">{{user.phone}}</td>
+                      <td class="cell"><a class="btn btn-outline-secondary" href="{% url 'dashboard:user_detail' user.id %}">View</a></td>
+                    </tr>
+                    {%endfor%}
+                  </tbody>
+                </table>
+              </div>
+              <!--//table-responsive-->
+            </div>
+            <!--//app-card-body-->
+          </div>
+          <!--//app-card-->
+        </div>
+        <!--//tab-pane-->
+      </div>
+      <!--//tab-content-->
+    </div>
+    <!--//container-fluid-->
+  </div>
+  <!--//app-content-->
+</div>
+<!--//app-wrapper-->
+
+{% endblock %} {% block extra_scripts %}
+<script src="{% static 'dashboard/assets/plugins/popper.min.js' %}"></script>
+<script src="{% static 'dashboard/assets/plugins/bootstrap/js/bootstrap.min.js' %}"></script>
+
+<!-- Page Specific JS -->
+<script src="{% static 'dashboard/assets/js/app.js' %}"></script>
+{% endblock %}

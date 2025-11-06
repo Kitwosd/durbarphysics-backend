@@ -1,0 +1,269 @@
+
+{% load static %}
+<!-- title for this page will be home -->
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+    <title>Dashboard | Login</title>
+
+    <!-- Meta -->
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta
+      name="description"
+      content="Portal - Bootstrap 5 Admin Dashboard Template For Developers"
+    />
+    <meta name="author" content="Xiaoying Riley at 3rd Wave Media" />
+    <link
+      rel="shortcut icon"
+      href="{% static 'dashboard/assets/images/favicon.ico' %}"
+    />
+
+    <!-- FontAwesome JS-->
+    <script
+      defer
+      src="{% static 'dashboard/assets/plugins/fontawesome/js/all.min.js' %}"
+    ></script>
+
+    <!-- App CSS -->
+    <link
+      id="theme-style"
+      rel="stylesheet"
+      href="{% static 'dashboard/assets/css/portal.css' %}"
+    />
+  </head>
+
+
+
+<body class="app app-login p-0">    	
+    <div class="row g-0 app-auth-wrapper">
+	    <div class="col-12 col-md-7 col-lg-6 auth-main-col text-center p-5">
+		    <div class="d-flex flex-column align-content-end">
+			    <div class="app-auth-body mx-auto">	
+				    <div class="app-auth-branding mb-4"><a class="app-logo" href="index.html"><img class="logo-icon me-2" src="{% static 'dashboard/assets/images/profiles/profile-1.png' %}" alt="logo"></a></div>
+					<h2 class="auth-heading text-center mb-5">Sign up to Portal</h2>
+			        <div class="auth-form-container text-start">
+						<form class="auth-form login-form" action="{% url 'dashboard:signup' %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+
+  <!-- Full Name -->
+  <div class="email mb-3">
+    <label class="sr-only" for="id_first_name">Full Name</label>
+    <input 
+      id="id_first_name" 
+      name="first_name" 
+      type="text" 
+      class="form-control signin-name {% if form.first_name.errors %}is-invalid{% endif %}"
+      placeholder="Full name" 
+      value="{{ form.first_name.value|default_if_none:'' }}"
+      required
+    >
+    {% for error in form.first_name.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Username -->
+  <div class="email mb-3">
+    <label class="sr-only" for="id_username">Username</label>
+    <input 
+      id="id_username" 
+      name="username" 
+      type="text" 
+      class="form-control signin-username {% if form.username.errors %}is-invalid{% endif %}" 
+      placeholder="Username"
+      value="{{ form.username.value|default_if_none:'' }}"
+      required
+    >
+    {% for error in form.username.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Phone -->
+  <div class="email mb-3">
+    <label class="sr-only" for="id_phone">Phone Number</label>
+    <input 
+      id="id_phone" 
+      name="phone" 
+      type="text" 
+      class="form-control signin-number {% if form.phone.errors %}is-invalid{% endif %}" 
+      placeholder="Phone Number"
+      value="{{ form.phone.value|default_if_none:'' }}"
+      required
+    >
+    {% for error in form.phone.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Role -->
+  <div class="user-type mb-3">
+    <label class="sr-only" for="id_role">User Type</label>
+    <select 
+      id="id_role" 
+      name="role" 
+      class="form-control user-type {% if form.role.errors %}is-invalid{% endif %}" 
+      required
+    >
+      <option value="" disabled {% if not form.role.value %}selected{% endif %}>Select User Type</option>
+      <option value="student" {% if form.role.value == 'student' %}selected{% endif %}>Student</option>
+      <option value="teacher" {% if form.role.value == 'teacher' %}selected{% endif %}>Teacher</option>
+    </select>
+    {% for error in form.role.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Password -->
+  <div class="password mb-3">
+    <label class="sr-only" for="id_password1">Password</label>
+    <input 
+      id="id_password1" 
+      name="password1" 
+      type="password" 
+      class="form-control signin-password {% if form.password1.errors %}is-invalid{% endif %}" 
+      placeholder="Password" 
+      required
+    >
+    {% for error in form.password1.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Confirm Password -->
+  <div class="password mb-3">
+    <label class="sr-only" for="id_password2">Confirm Password</label>
+    <input 
+      id="id_password2" 
+      name="password2" 
+      type="password" 
+      class="form-control signin-password {% if form.password2.errors %}is-invalid{% endif %}" 
+      placeholder="Confirm Password" 
+      required
+    >
+    {% for error in form.password2.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Profile Picture -->
+  <div class="profile-image mb-3" style="margin: 10px;">
+    <label class="sr-only" for="id_profile_picture">Profile Image</label>
+    <input 
+      id="id_profile_picture" 
+      name="profile_picture" 
+      type="file" 
+      class="form-control profile-image {% if form.profile_picture.errors %}is-invalid{% endif %}"
+    >
+    {% for error in form.profile_picture.errors %}
+      <div class="invalid-feedback">{{ error }}</div>
+    {% endfor %}
+  </div>
+
+  <!-- Buttons -->
+  <div class="extra mt-3 row justify-content-between">
+    <div class="col-6">
+      <div class="form-check">
+        <input class="form-check-input" type="checkbox" value="" id="RememberPassword">
+        <label class="form-check-label" for="RememberPassword">Remember me</label>
+      </div>
+    </div>
+    <div class="col-6">
+      <div class="forgot-password text-end">
+        <a href="#">Forgot password?</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <button type="submit" class="btn app-btn-primary w-100 theme-btn mx-auto">Sign Up</button>
+  </div>
+</form>
+
+						<div style="margin-top: -30px;" class="auth-option text-center pt-5">Have Account?  <a class="text-link" href="{% url 'dashboard:login' %}" >Login here</a>.</div>
+					</div><!--//auth-form-container-->
+
+			    </div><!--//auth-body-->
+		    
+			    <footer class="app-footer">
+      <div class="container text-center py-3">
+      </div>
+	  <style>
+	#message-container {
+    position: fixed; /* Keep it visible even when scrolling */
+    top: 20px;
+    right: 20px;
+    z-index: 1000; /* Ensure it's on top of other elements */
+    width: 300px;
+}
+
+.alert {
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    color: #fff; /* White text */
+}
+
+/* Reddish style for the 'error' tag */
+.alert-error {
+    background-color: #dc3545; /* A standard, deep red */
+    border: 1px solid #c82333;
+}
+</style>
+
+							<div>
+								<!-- show message if any red -->
+								<div id="message-container">
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    </div>
+
+	<script>
+		// 1. Select all the message alerts
+    const alerts = document.querySelectorAll('#message-container .alert');
+
+    // 2. Loop through each alert and set a timer
+    alerts.forEach(alert => {
+        setTimeout(() => {
+            // After 3000ms (3 seconds), hide the alert element
+            alert.style.display = 'none'; 
+            // Optional: You could also remove it from the DOM: alert.remove();
+        }, 3000);
+    });
+	</script>
+    </footer>
+		    </div><!--//flex-column-->   
+	    </div><!--//auth-main-col-->
+	    <div class="col-12 col-md-5 col-lg-6 h-100 auth-background-col">
+		    <div class="auth-background-holder">
+		    </div>
+		    <div class="auth-background-mask"></div>
+		    <div class="auth-background-overlay p-3 p-lg-5">
+			    <div class="d-flex flex-column align-content-end h-100">
+				    <div class="h-100"></div>
+				    <div class="overlay-content p-3 p-lg-4 rounded">
+					    <h5 class="mb-3 overlay-title">Welcome to Login page</h5>
+					    <div>Please enter your credentials to login to dashboard. </div>
+				    <div>
+						<span style="opacity: 60%;" >Do not share your credentials with anyone else.</span> 
+					</div></div>
+					
+				</div>
+		    </div><!--//auth-background-overlay-->
+	    </div><!--//auth-background-col-->
+    
+    </div><!--//row-->
+
+
+</body>
+</html> 
+

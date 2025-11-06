@@ -1,0 +1,283 @@
+{% extends 'dashboard/base.html' %} {% load static %} {% block title %}Create
+New{% endblock %} {% block content %}
+<div class="app-wrapper">
+  <div class="app-content pt-3 p-md-3 p-lg-4">
+    <div class="container-xl">
+      <div class="row">
+        <div class="col-lg-8">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h5 class="card-title">Create New Item</h5>
+
+              <form
+                method="post"
+                action=""
+                enctype="multipart/form-data"
+                id="create-form"
+              >
+                {% csrf_token %}
+
+                <div class="mb-3">
+                  <label for="id_type" class="form-label">Type</label>
+                  <select id="id_type" name="type" class="form-select">
+                    <option value="course">Course</option>
+                    <option value="subject">Subject</option>
+                    <option value="student">Student</option>
+                    <option value="teacher">Teacher</option>
+                  </select>
+                </div>
+
+                <!-- common fields -->
+                <div class="mb-3">
+                  <label for="id_name" class="form-label">Name / Title</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="id_name"
+                    name="name"
+                    placeholder="Enter name or title"
+                    required
+                  />
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_code" class="form-label">Code / ID</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="id_code"
+                    name="code"
+                    placeholder="Optional code or identifier"
+                  />
+                </div>
+
+                <!-- course/subject specific -->
+                <div id="section-course" class="entity-section">
+                  <div class="mb-3">
+                    <label for="id_credits" class="form-label">Credits</label>
+                    <input
+                      type="number"
+                      class="form-control"
+                      id="id_credits"
+                      name="credits"
+                      min="0"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_duration" class="form-label">Duration</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id_duration"
+                      name="duration"
+                      placeholder="e.g. 3 months, 1 semester"
+                    />
+                  </div>
+                </div>
+
+                <div
+                  id="section-subject"
+                  class="entity-section"
+                  style="display: none"
+                >
+                  <div class="mb-3">
+                    <label for="id_course" class="form-label"
+                      >Parent Course</label
+                    >
+                    <select
+                      id="id_course"
+                      name="parent_course"
+                      class="form-select"
+                    >
+                      <option value="">-- Not linked --</option>
+                    </select>
+                  </div>
+                </div>
+
+                <!-- student specific -->
+                <div
+                  id="section-student"
+                  class="entity-section"
+                  style="display: none"
+                >
+                  <div class="mb-3">
+                    <label for="id_enrollment" class="form-label"
+                      >Enrollment No.</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id_enrollment"
+                      name="enrollment"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_dob" class="form-label">Date of Birth</label>
+                    <input
+                      type="date"
+                      class="form-control"
+                      id="id_dob"
+                      name="dob"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_email" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="id_email"
+                      name="email"
+                    />
+                  </div>
+                </div>
+
+                <!-- teacher specific -->
+                <div
+                  id="section-teacher"
+                  class="entity-section"
+                  style="display: none"
+                >
+                  <div class="mb-3">
+                    <label for="id_empid" class="form-label">Employee ID</label>
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id_empid"
+                      name="empid"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_department" class="form-label"
+                      >Department</label
+                    >
+                    <input
+                      type="text"
+                      class="form-control"
+                      id="id_department"
+                      name="department"
+                    />
+                  </div>
+                  <div class="mb-3">
+                    <label for="id_email_t" class="form-label">Email</label>
+                    <input
+                      type="email"
+                      class="form-control"
+                      id="id_email_t"
+                      name="email_teacher"
+                    />
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_description" class="form-label"
+                    >Description</label
+                  >
+                  <textarea
+                    id="id_description"
+                    name="description"
+                    class="form-control"
+                    rows="4"
+                  ></textarea>
+                </div>
+
+                <div class="mb-3">
+                  <label for="id_image" class="form-label"
+                    >Image (optional)</label
+                  >
+                  <input
+                    class="form-control"
+                    type="file"
+                    id="id_image"
+                    name="image"
+                  />
+                </div>
+
+                <div class="d-flex justify-content-end mt-3">
+                  <a href="subjects.html" class="btn btn-secondary me-2"
+                    >Cancel</a
+                  >
+                  <button
+                    type="submit"
+                    class="btn btn-primary"
+                    id="create-submit"
+                  >
+                    Create
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body">
+              <h6 class="card-title">Tips</h6>
+              <p class="small text-muted">
+                Select the type of item you want to create. The form will adapt
+                to show fields relevant to the chosen type. Server-side
+                validation should still be enforced in your view.
+              </p>
+              <hr />
+              <p class="small text-muted mb-0">
+                If you pass a Django form as the context variable
+                <code>form</code>, the template will render it automatically
+                instead of the manual fields.
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--//container-xl-->
+  </div>
+  <!--//app-content-->
+</div>
+<!--//app-wrapper-->
+{% endblock %} {% block extra_scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    var typeSelect = document.getElementById("id_type");
+    var sections = {
+      course: document.getElementById("section-course"),
+      subject: document.getElementById("section-subject"),
+      student: document.getElementById("section-student"),
+      teacher: document.getElementById("section-teacher"),
+    };
+
+    function showSection(type) {
+      Object.keys(sections).forEach(function (k) {
+        var el = sections[k];
+        if (!el) return;
+        if (k === type) el.style.display = "";
+        else el.style.display = "none";
+      });
+    }
+
+    if (typeSelect) {
+      typeSelect.addEventListener("change", function (e) {
+        showSection(e.target.value);
+      });
+      // show initial
+      showSection(typeSelect.value);
+    }
+
+    // basic submit guard
+    var form = document.getElementById("create-form");
+    var submit = document.getElementById("create-submit");
+    if (form && submit) {
+      form.addEventListener("submit", function (e) {
+        var name = document.getElementById("id_name");
+        if (name && name.value.trim() === "") {
+          e.preventDefault();
+          name.classList.add("is-invalid");
+          name.focus();
+          return false;
+        }
+        submit.disabled = true;
+        submit.innerText = "Creating...";
+      });
+    }
+  });
+</script>
+{% endblock %}
