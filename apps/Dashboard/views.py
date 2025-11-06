@@ -14,6 +14,7 @@ from .forms import (
     SubjectForm, EnrollmentForm, LiveClassForm, 
     ExtraCurricularActivityForm, VideoForm
 )
+from apps.Course.forms import EnrollmentEditForm
 
 # ============================================
 # basic page rendering views
@@ -62,6 +63,8 @@ def stream_list_view(request):
 
 @login_required
 def video_list_view(request):
+
+    
     return render(request, 'dashboard/video.html')
 
 
@@ -83,6 +86,9 @@ def enrollment_list_view(request):
 
 @login_required
 def live_classes_view(request):
+
+
+
     return render(request, 'dashboard/liveclasses.html')
 
 @login_required
@@ -406,17 +412,17 @@ def subject_delete(request, pk):
 
 @login_required
 def enrollment_detail(request, pk):
-    enrollment = get_object_or_404(models.Enrollment, pk=pk)
+    enrollment = get_object_or_404(models.User, pk=pk)
     if request.method == 'POST':
-        form = EnrollmentForm(request.POST, instance=enrollment)
+        form = EnrollmentEditForm(request.POST, user_instance=enrollment)
         if form.is_valid():
             form.save()
-            messages.success(request, f'Enrollment updated successfully!')
+            messages.success(request, f'Academic level updated successfully for {enrollment.get_full_name() or enrollment.username}!')
             return redirect('dashboard:enrollment_detail', pk=pk)
         else:
             messages.error(request, 'Please correct the errors below.')
     else:
-        form = EnrollmentForm(instance=enrollment)
+        form = EnrollmentEditForm(user_instance=enrollment)
     
     context = {
         'form': form,

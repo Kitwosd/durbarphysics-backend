@@ -261,7 +261,7 @@ class Video(models.Model):
     url = models.URLField(max_length=500, help_text="Link to the video (YouTube/Vimeo/...)", unique=True)
     level = models.ForeignKey(AcademicLevel, related_name="videos", on_delete=models.CASCADE, blank=True, null=True)
     subject = models.ForeignKey(Subject, related_name="videos", on_delete=models.SET_NULL, null=True, blank=True)
-    stream = models.ManyToManyField(Stream, related_name="videos",  null=True, blank=True)
+    stream = models.ManyToManyField(Stream, related_name="videos", blank=True)
     teacher = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="uploaded_videos", limit_choices_to={"role": User.Role.TEACHER}, blank=True, null=True, help_text="Must be a teacher")
     cost = models.DecimalField(max_digits=8, decimal_places=2, default=0, help_text="Cost to access the video (0.00 for free)")
     uploaded_at = models.DateTimeField(auto_now_add=True)

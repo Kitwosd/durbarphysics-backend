@@ -94,15 +94,15 @@ def add_enrollment(request):
     if request.method == 'POST':
         form = EnrollmentForm(request.POST)
         if form.is_valid():
-            form.save()
-            messages.success(request, 'Enrollment added successfully!')
+            student = form.save()
+            messages.success(request, f'Academic level assigned to {student.username} successfully!')
             return redirect('dashboard:enrollment_home')
     else:
         form = EnrollmentForm()
     
     context = {
         'form': form,
-        'item_name': 'Enrollment',
+        'item_name': 'Student Academic Level',
         'back_url': 'enrollment_list',
     }
     return render(request, 'dashboard/add_item.html', context)
@@ -115,7 +115,7 @@ def add_live_class(request):
         if form.is_valid():
             form.save()
             messages.success(request, 'Live Class added successfully!')
-            return redirect('video_home')
+            return redirect('dashboard:video_home')
     else:
         form = LiveClassForm()
     

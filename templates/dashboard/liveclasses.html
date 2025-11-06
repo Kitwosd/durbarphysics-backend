@@ -37,7 +37,8 @@
 											<tr>
 												<th class="cell">Id</th>
 												<th class="cell">Name</th>
-												<th class="cell">Description</th>
+												<th class="cell">Subject</th>
+												<th class="cell">Teacher</th>
 												<th class="cell">Start time</th>
 												<th class="cell">Actions</th>
 											</tr>
@@ -46,8 +47,9 @@
 											{% for class in live_classes %}
 											<tr>
 												<td class="cell">#{{ forloop.counter }}</td>
-												<td class="cell"><span class="truncate">{{ class.name }}</span></td>
-												<td class="cell">{{ class.description }}</td>
+												<td class="cell"><span class="truncate">{{ class.title }}</span></td>
+												<td class="cell">{{ class.subject }}</td>
+												<td class="cell">{{ class.hosts }}</td>
 												<td class="cell"><span>{{ class.start_time|date:"d M" }}</span><span class="note">{{ class.start_time|time:"h:i A" }}</span></td>
 <td><a class="btn btn-outline-secondary" href="{% url 'dashboard:liveclass_detail' class.id %}">View</a></td>
 												</tr>

@@ -81,7 +81,73 @@ class SubjectForm(forms.ModelForm):
         }
 
 
-class EnrollmentForm(forms.ModelForm):
+class EnrollmentForm(forms.Form):
+    """Form to assign academic level to a student (updates User.academic_level)"""
+    student = forms.ModelChoiceField(
+        queryset=User.objects.filter(role=User.Role.STUDENT, academic_level__isnull=True),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Student',
+        help_text='Select a student without an assigned academic level'
+    )
+    level = forms.ModelChoiceField(
+        queryset=AcademicLevel.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Academic Level',
+        help_text='Select the academic level to assign to this student'
+    )
+
+    def save(self):
+        """Update the user's academic_level field"""
+        student = self.cleaned_data['student']
+        level = self.cleaned_data['level']
+        student.academic_level = level
+        student.save()
+        return student
+
+
+class EnrollmentEditForm(forms.Form):
+    """Form to edit an existing student's academic level (student field is read-only)"""
+    student = forms.CharField(
+        widget=forms.TextInput(attrs={
+            'class': 'form-control', 
+            'readonly': 'readonly'
+        }),
+        label='Student',
+        help_text='Student cannot be changed',
+        required=False
+    )
+    level = forms.ModelChoiceField(
+        queryset=AcademicLevel.objects.all(),
+        widget=forms.Select(attrs={'class': 'form-select'}),
+        label='Academic Level',
+        help_text='Select the new academic level for this student'
+    )
+    
+    def __init__(self, *args, user_instance=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        if user_instance:
+            # Set the student field to display the user's full name
+            student_name = user_instance.get_full_name() or user_instance.username
+            self.fields['student'].initial = student_name
+            # Set the current academic level
+            if user_instance.academic_level:
+                self.fields['level'].initial = user_instance.academic_level
+            self.user_instance = user_instance
+        
+        # Make student field read-only by preventing it from being changed
+        self.fields['student'].widget.attrs['readonly'] = 'readonly'
+        self.fields['student'].widget.attrs['style'] = 'background-color: #e9ecef; cursor: not-allowed;'
+    
+    def save(self):
+        """Update the user's academic_level field"""
+        level = self.cleaned_data['level']
+        self.user_instance.academic_level = level
+        self.user_instance.save()
+        return self.user_instance
+
+
+class EnrollmentModelForm(forms.ModelForm):
+    """Original enrollment form (kept for backward compatibility if needed)"""
     class Meta:
         model = Enrollment
         fields = ['student', 'level', 'is_active']
