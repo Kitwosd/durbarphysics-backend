@@ -1,0 +1,652 @@
+/* ===================================================================
+   Custom Design Enhancements for Course Management System
+   Purpose: Modern visual improvements without logic changes
+   Author: Custom Enhancements
+   =================================================================== */
+
+/* ==================== Root Variables for Enhanced Colors ==================== */
+:root {
+    --custom-primary: #15a362;
+    --custom-primary-light: #1bc87a;
+    --custom-primary-dark: #0f7c4a;
+    --custom-shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --custom-shadow-md: 0 4px 16px rgba(0, 0, 0, 0.12);
+    --custom-shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.16);
+    --custom-shadow-hover: 0 6px 24px rgba(21, 163, 98, 0.20);
+    --custom-gradient-primary: linear-gradient(135deg, #15a362 0%, #1bc87a 100%);
+    --custom-gradient-overlay: linear-gradient(135deg, rgba(21, 163, 98, 0.9), rgba(27, 200, 122, 0.9));
+    --custom-transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    --custom-border-radius: 12px;
+}
+
+/* ==================== Global Smooth Transitions ==================== */
+* {
+    transition: var(--custom-transition);
+}
+
+/* Remove transition for certain properties to avoid flicker */
+*::before,
+*::after {
+    transition: var(--custom-transition);
+}
+
+/* ==================== Enhanced Body & Background ==================== */
+body.app {
+    background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
+    overflow-x: hidden;
+}
+
+/* ==================== Modern Card Enhancements ==================== */
+.app-card {
+    border-radius: var(--custom-border-radius);
+    box-shadow: var(--custom-shadow-sm);
+    border: 1px solid rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.app-card:hover {
+    transform: translateY(-4px);
+    box-shadow: var(--custom-shadow-md);
+}
+
+/* Enhanced stat cards */
+.app-card-stat {
+    background: linear-gradient(135deg, #ffffff 0%, #f9fafb 100%);
+    border-top: 3px solid var(--custom-primary);
+}
+
+.app-card-stat:hover {
+    background: linear-gradient(135deg, #ffffff 0%, #f5f8fa 100%);
+    box-shadow: var(--custom-shadow-hover);
+}
+
+.app-card-stat .stats-figure {
+    background: var(--custom-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 700;
+}
+
+/* Card headers with subtle gradient */
+.app-card-header {
+    background: linear-gradient(to bottom, #fafbfc 0%, #ffffff 100%);
+    border-bottom: 2px solid rgba(21, 163, 98, 0.1) !important;
+}
+
+/* Enhanced card bodies */
+.app-card-body {
+    position: relative;
+}
+
+/* ==================== Button Enhancements ==================== */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 300px;
+    height: 300px;
+}
+
+.btn-primary,
+.app-btn-primary {
+    background: var(--custom-gradient-primary);
+    border: none;
+    box-shadow: 0 4px 12px rgba(21, 163, 98, 0.3);
+}
+
+.btn-primary:hover,
+.app-btn-primary:hover {
+    background: linear-gradient(135deg, #1bc87a 0%, #15a362 100%);
+    box-shadow: 0 6px 20px rgba(21, 163, 98, 0.4);
+    transform: translateY(-2px);
+}
+
+.btn-outline-secondary {
+    border: 2px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+.btn-outline-secondary:hover {
+    background: var(--custom-primary);
+    border-color: var(--custom-primary);
+    color: white;
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.btn-sm {
+    border-radius: 6px;
+    padding: 0.4rem 0.9rem;
+}
+
+/* ==================== Form Enhancements ==================== */
+.form-control,
+.form-select {
+    border-radius: 8px;
+    border: 2px solid #e8eaed;
+    transition: all 0.3s ease;
+    background: #fafbfc;
+}
+
+.form-control:focus,
+.form-select:focus {
+    border-color: var(--custom-primary);
+    background: white;
+    box-shadow: 0 0 0 4px rgba(21, 163, 98, 0.1);
+    transform: translateY(-1px);
+}
+
+.form-label {
+    font-weight: 600;
+    color: #374151;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+/* ==================== Table Enhancements ==================== */
+.table {
+    border-radius: var(--custom-border-radius);
+    overflow: hidden;
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.table thead th {
+    background: var(--custom-gradient-primary);
+    color: white;
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.5px;
+    border: none;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: all 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background: rgba(21, 163, 98, 0.05);
+    transform: scale(1.01);
+    box-shadow: inset 0 0 0 2px rgba(21, 163, 98, 0.1);
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(245, 246, 254, 0.5);
+}
+
+/* ==================== Badge Enhancements ==================== */
+.badge {
+    border-radius: 20px;
+    padding: 0.4em 0.9em;
+    font-weight: 600;
+    font-size: 0.8rem;
+    letter-spacing: 0.3px;
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.badge-primary,
+.bg-primary {
+    background: var(--custom-gradient-primary) !important;
+}
+
+.badge-success,
+.bg-success {
+    background: linear-gradient(135deg, #5cb377 0%, #6ec287 100%) !important;
+}
+
+/* ==================== Header Enhancements ==================== */
+.app-header {
+    background: white;
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+.app-search-box .search-input {
+    border-radius: 24px;
+    border: 2px solid #e8eaed;
+    background: #f8f9fa;
+    transition: all 0.3s ease;
+    padding-left: 1rem;
+}
+
+.app-search-box .search-input:focus {
+    border-color: var(--custom-primary);
+    background: white;
+    box-shadow: 0 4px 12px rgba(21, 163, 98, 0.15);
+    transform: scale(1.02);
+}
+
+.app-search-box .search-btn {
+    border-radius: 20px;
+    background: var(--custom-gradient-primary);
+    border: none;
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.app-search-box .search-btn:hover {
+    box-shadow: var(--custom-shadow-md);
+    transform: scale(1.05);
+}
+
+/* ==================== Sidebar Enhancements ==================== */
+.app-sidepanel {
+    box-shadow: 2px 0 16px rgba(0, 0, 0, 0.08);
+    background: linear-gradient(180deg, #ffffff 0%, #fafbfc 100%);
+}
+
+.app-nav-item {
+    border-radius: 8px;
+    margin: 0.25rem 0;
+    transition: all 0.3s ease;
+}
+
+.app-nav-item:hover {
+    background: rgba(21, 163, 98, 0.08);
+    transform: translateX(4px);
+}
+
+.app-nav-item.active {
+    background: var(--custom-gradient-primary);
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.app-nav-item.active .nav-link {
+    color: white !important;
+}
+
+/* ==================== Icon Holder Enhancements ==================== */
+.app-icon-holder {
+    background: linear-gradient(135deg, rgba(21, 163, 98, 0.15) 0%, rgba(27, 200, 122, 0.15) 100%);
+    border-radius: 12px;
+    transition: all 0.3s ease;
+}
+
+.app-icon-holder:hover {
+    background: linear-gradient(135deg, rgba(21, 163, 98, 0.25) 0%, rgba(27, 200, 122, 0.25) 100%);
+    transform: rotate(5deg) scale(1.1);
+}
+
+/* ==================== Alert Enhancements ==================== */
+.alert {
+    border-radius: var(--custom-border-radius);
+    border: none;
+    box-shadow: var(--custom-shadow-md);
+    border-left: 4px solid var(--custom-primary);
+}
+
+.alert-dismissible .btn-close {
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
+.alert-dismissible .btn-close:hover {
+    background: rgba(0, 0, 0, 0.1);
+    transform: rotate(90deg);
+}
+
+/* ==================== Dropdown Enhancements ==================== */
+.dropdown-menu {
+    border-radius: 12px;
+    box-shadow: var(--custom-shadow-lg);
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    padding: 0.5rem;
+    animation: dropdownFadeIn 0.3s ease;
+}
+
+@keyframes dropdownFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.dropdown-item {
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    margin-bottom: 0.25rem;
+}
+
+.dropdown-item:hover {
+    background: var(--custom-gradient-primary);
+    color: white;
+    transform: translateX(4px);
+}
+
+/* ==================== User Profile Image Enhancement ==================== */
+.app-user-dropdown img {
+    border: 3px solid white;
+    box-shadow: var(--custom-shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.app-user-dropdown img:hover {
+    box-shadow: 0 0 0 4px rgba(21, 163, 98, 0.3);
+    transform: scale(1.1);
+}
+
+/* ==================== Page Title Enhancement ==================== */
+.app-page-title {
+    position: relative;
+    padding-left: 1rem;
+    color: #1f2937;
+    font-weight: 700;
+}
+
+.app-page-title::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 5px;
+    height: 70%;
+    background: var(--custom-gradient-primary);
+    border-radius: 3px;
+}
+
+/* ==================== Stats List Enhancement ==================== */
+.stats-meta {
+    font-weight: 500;
+}
+
+/* ==================== Progress Bar Enhancement ==================== */
+.progress {
+    border-radius: 10px;
+    background: #e9ecef;
+    box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+    background: var(--custom-gradient-primary);
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(21, 163, 98, 0.4);
+}
+
+/* ==================== Modal Enhancements ==================== */
+.modal-content {
+    border-radius: var(--custom-border-radius);
+    border: none;
+    box-shadow: var(--custom-shadow-lg);
+}
+
+.modal-header {
+    background: var(--custom-gradient-primary);
+    color: white;
+    border-top-left-radius: var(--custom-border-radius);
+    border-top-right-radius: var(--custom-border-radius);
+}
+
+.modal-footer {
+    border-top: 2px solid rgba(0, 0, 0, 0.05);
+}
+
+/* ==================== Link Hover Effects ==================== */
+a {
+    transition: all 0.3s ease;
+}
+
+a:hover {
+    transform: translateX(2px);
+}
+
+/* ==================== Breadcrumb Enhancement ==================== */
+.breadcrumb {
+    background: transparent;
+    padding: 0;
+}
+
+.breadcrumb-item + .breadcrumb-item::before {
+    color: var(--custom-primary);
+}
+
+/* ==================== Glassmorphism Effect for Certain Cards ==================== */
+.app-card.glass-effect {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* ==================== Scrollbar Enhancement ==================== */
+::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: linear-gradient(180deg, var(--custom-primary) 0%, var(--custom-primary-light) 100%);
+    border-radius: 10px;
+    border: 2px solid #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: linear-gradient(180deg, var(--custom-primary-dark) 0%, var(--custom-primary) 100%);
+}
+
+/* ==================== Loading Animation (for future use) ==================== */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.loading-pulse {
+    animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* ==================== Fade In Animation for Cards ==================== */
+.app-card {
+    animation: fadeInUp 0.5s ease;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* ==================== Text Selection Enhancement ==================== */
+::selection {
+    background: var(--custom-primary);
+    color: white;
+}
+
+::-moz-selection {
+    background: var(--custom-primary);
+    color: white;
+}
+
+/* ==================== Focus Visible Enhancement ==================== */
+*:focus-visible {
+    outline: 3px solid rgba(21, 163, 98, 0.5);
+    outline-offset: 2px;
+}
+
+/* ==================== Enhanced Shadow Classes ==================== */
+.shadow-soft {
+    box-shadow: var(--custom-shadow-sm) !important;
+}
+
+.shadow-hover {
+    transition: box-shadow 0.3s ease;
+}
+
+.shadow-hover:hover {
+    box-shadow: var(--custom-shadow-hover) !important;
+}
+
+/* ==================== Utility: Gradient Text ==================== */
+.text-gradient {
+    background: var(--custom-gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* ==================== Responsive Adjustments ==================== */
+@media (max-width: 768px) {
+    .app-card:hover {
+        transform: none;
+    }
+    
+    .btn:hover::before {
+        width: 0;
+        height: 0;
+    }
+    
+    :root {
+        --custom-border-radius: 10px;
+    }
+}
+
+/* ==================== Print Styles ==================== */
+@media print {
+    .app-card {
+        box-shadow: none;
+        border: 1px solid #ddd;
+    }
+    
+    .btn {
+        box-shadow: none;
+    }
+}
+
+/* ==================== Dark Mode Support (optional future enhancement) ==================== */
+@media (prefers-color-scheme: dark) {
+    /* Dark mode styles can be added here in future */
+}
+
+/* ==================== Smooth Scroll Behavior ==================== */
+html {
+    scroll-behavior: smooth;
+}
+
+/* ==================== Enhanced List Items ==================== */
+.list-group-item {
+    border-radius: 8px;
+    margin-bottom: 0.5rem;
+    border: 1px solid rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.list-group-item:hover {
+    background: rgba(21, 163, 98, 0.05);
+    transform: translateX(4px);
+    box-shadow: var(--custom-shadow-sm);
+}
+
+/* ==================== Enhanced Pagination ==================== */
+.pagination .page-link {
+    border-radius: 8px;
+    margin: 0 0.25rem;
+    border: 2px solid #e0e0e0;
+    color: var(--custom-primary);
+    transition: all 0.3s ease;
+}
+
+.pagination .page-link:hover {
+    background: var(--custom-gradient-primary);
+    color: white;
+    border-color: var(--custom-primary);
+    transform: translateY(-2px);
+    box-shadow: var(--custom-shadow-sm);
+}
+
+.pagination .page-item.active .page-link {
+    background: var(--custom-gradient-primary);
+    border-color: var(--custom-primary);
+    box-shadow: var(--custom-shadow-sm);
+}
+
+/* ==================== Card Title Enhancement ==================== */
+.card-title {
+    color: #1f2937;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+/* ==================== Enhanced Input Groups ==================== */
+.input-group-text {
+    background: var(--custom-gradient-primary);
+    color: white;
+    border: none;
+    font-weight: 600;
+}
+
+/* ==================== Tooltip Enhancement ==================== */
+.tooltip-inner {
+    background: var(--custom-gradient-primary);
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    box-shadow: var(--custom-shadow-md);
+}
+
+/* ==================== Enhanced File Upload ==================== */
+input[type="file"]::-webkit-file-upload-button {
+    background: var(--custom-gradient-primary);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+input[type="file"]::-webkit-file-upload-button:hover {
+    transform: scale(1.05);
+    box-shadow: var(--custom-shadow-sm);
+}
+
+/* ==================== Enhanced Checkbox & Radio ==================== */
+.form-check-input {
+    border-radius: 6px;
+    border: 2px solid #d1d5db;
+    transition: all 0.3s ease;
+}
+
+.form-check-input:checked {
+    background: var(--custom-gradient-primary);
+    border-color: var(--custom-primary);
+    box-shadow: 0 0 0 4px rgba(21, 163, 98, 0.2);
+}
+
+/* ==================== End of Custom Enhancements ==================== */

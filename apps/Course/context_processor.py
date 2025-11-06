@@ -12,7 +12,6 @@ def all_extra_curricular_activities_processor(request):
 
 def current_path(request):
     print(f"---------------------Request Path:: {request.path}---------------------")
-    print(request.user if request.user.is_authenticated else "Developer")
     return {'current_path': request.path}
 
 def get_all_classes_processor(request):

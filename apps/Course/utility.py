@@ -51,7 +51,6 @@ def get_all_subjects():
         'subject_count': subject_count,
         'limited_subjects': limited_subjects
     }
-    print("total subjects::", subject_count)
     return context
 
 def get_all_extra_curricular_activities():
@@ -106,17 +105,7 @@ def get_all_videos():
     videos = Video.objects.all()
     video_count = videos.count()
     limited_videos = videos.order_by('-pk')[:3]
-    print('---')
-    for video in videos:
-        print(f'Video ID: {video.id}, Title: {video.title}')
-        # ManyToMany field - need to use .all() to get the related streams
-        streams = video.stream.all()
-        if streams.exists():
-            stream_names = ', '.join([stream.name for stream in streams])
-            print(f'streams: {stream_names}')
-        else:
-            print(f'streams: None assigned')
-    print('---')
+
     context = {
         'videos': videos,
         'video_count': video_count,
