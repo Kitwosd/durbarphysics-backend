@@ -27,7 +27,6 @@ urlpatterns = [
 
 
 # this path is for testing purposes 
-    path('test/', views.test, name='test'),
     path('create-new/', views.create_new_view, name='create_new'),
 
 

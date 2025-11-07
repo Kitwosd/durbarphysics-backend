@@ -129,17 +129,11 @@ def add_live_class(request):
 
 @login_required
 def add_activity(request):
-    print(1)
     if request.method == 'POST':
-        print(2)
         form = ExtraCurricularActivityForm(request.POST)
-        print(3)
         if form.is_valid():
-            print(4)
             form.save()
-            print(5)
             messages.success(request, 'Activity added successfully!')
-            print(6)
             return redirect('dashboard:course_home')
     else:
         form = ExtraCurricularActivityForm()

@@ -1,3 +1,5 @@
+from multiprocessing import context
+from urllib import request
 from django.core.files.storage import FileSystemStorage
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
@@ -21,18 +23,23 @@ from apps.Course.forms import EnrollmentEditForm
 # ============================================
 
 
-def test(request):
-    return render(request, 'dashboard/detailed.html')
-
 @login_required
 def course_home_view(request):
-    return render(request, 'dashboard/course_home.html')
+    extra_activities = models.ExtraCurricularActivity.objects.all()
+    extra_activity_count = extra_activities.count()
+    limited_activities = extra_activities[:3]
+    context = {
+        'extra_activities': extra_activities,
+        'extra_activity_count': extra_activity_count,
+        'limited_activities': limited_activities
+    }
+    return render(request, 'dashboard/course_home.html', context)
 
 @login_required
 def class_level_view(request, level_slug):
     level = models.AcademicLevel.objects.filter(slug=level_slug).first()
     if not level:
-        messages.error(request, "Academic level not found.")
+        messages.error(request, "Academic level not found.")    
         return redirect('dashboard:index')
     users = models.User.objects.filter(academic_level=level)
     context = {
@@ -43,14 +50,66 @@ def class_level_view(request, level_slug):
 
 @login_required
 def subject_list_view(request):
-    return render(request, 'dashboard/subjects.html')
+    subjects = models.Subject.objects.all()
+    context = {
+        'subjects': subjects,
+        'subject_count': subjects.count(),
+        'limited_subjects': subjects[:3],
+    }
+    return render(request, 'dashboard/subjects.html', context)
 
 @login_required
 def student_list_view(request):
-    return render(request, 'dashboard/students.html')
+    all_users = User.objects.all()
+
+    # Count users by role (single DB query)
+    queryset_results = all_users.values('role').annotate(user_count=Count('role'))
+    role_counts = {item['role']: item['user_count'] for item in queryset_results}
+
+    total_users = sum(role_counts.values())
+    admin_count = role_counts.get(User.Role.ADMIN, 0)
+    teacher_count = role_counts.get(User.Role.TEACHER, 0)
+    student_count = role_counts.get(User.Role.STUDENT, 0)
+
+    # Separate users in Python (no new queries)
+    teachers = [user for user in all_users if user.role == User.Role.TEACHER]
+    students = [user for user in all_users if user.role == User.Role.STUDENT]
+
+    context = {
+        'total': total_users,
+        'admin_count': admin_count,
+        'teacher_count': teacher_count,
+        'student_count': student_count,
+        'teachers': teachers,
+        'students': students,
+    }
+    return render(request, 'dashboard/students.html', context)
 
 @login_required
 def teacher_list_view(request):
+    all_users = User.objects.all()
+
+    # Count users by role (single DB query)
+    queryset_results = all_users.values('role').annotate(user_count=Count('role'))
+    role_counts = {item['role']: item['user_count'] for item in queryset_results}
+
+    total_users = sum(role_counts.values())
+    admin_count = role_counts.get(User.Role.ADMIN, 0)
+    teacher_count = role_counts.get(User.Role.TEACHER, 0)
+    student_count = role_counts.get(User.Role.STUDENT, 0)
+
+    # Separate users in Python (no new queries)
+    teachers = [user for user in all_users if user.role == User.Role.TEACHER]
+    students = [user for user in all_users if user.role == User.Role.STUDENT]
+
+    context = {
+        'total': total_users,
+        'admin_count': admin_count,
+        'teacher_count': teacher_count,
+        'student_count': student_count,
+        'teachers': teachers,
+        'students': students,
+    }
     return render(request, 'dashboard/teachers.html')
 
 @login_required
@@ -59,15 +118,23 @@ def create_new_view(request):
 
 @login_required
 def stream_list_view(request):
-    return render(request, 'dashboard/streams.html')
+    streams = models.Stream.objects.all().order_by('-pk')
+    context={
+        'streams': streams,
+        'stream_count': streams.count(),
+        'limited_streams': streams[:3],
+    }
+    return render(request, 'dashboard/streams.html', context)
 
 @login_required
 def video_list_view(request):
-
-    
-    return render(request, 'dashboard/video.html')
-
-
+    videos = models.Video.objects.all().order_by('-pk')
+    context={
+        'videos': videos,
+        'video_count': videos.count(),
+        'limited_videos': videos[:3],
+    }
+    return render(request, 'dashboard/video.html', context)
 
 @login_required
 def enrollment_list_view(request):
@@ -87,14 +154,105 @@ def enrollment_list_view(request):
 @login_required
 def live_classes_view(request):
 
+    live_classes = models.LiveClass.objects.all().order_by('-pk')
+    context = {
+        'live_classes': live_classes,
+        'live_class_count': live_classes.count(),
+        'limited_live_classes': live_classes[:3],
+    }
+
+    return render(request, 'dashboard/liveclasses.html', context)
 
 
-    return render(request, 'dashboard/liveclasses.html')
+# from django.contrib.auth.decorators import login_required
+from django.db.models import Count
+# from django.shortcuts import render
+# from . import models
+from apps.Course.models import User, Stream, LiveClass, Video
 
 @login_required
 def dashboard_view(request):
-    return render(request, 'dashboard/index.html')
+    context = {}
 
+    # === 1. User Statistics ===
+    all_users = User.objects.all()
+
+    # Count users by role (single DB query)
+    queryset_results = all_users.values('role').annotate(user_count=Count('role'))
+    role_counts = {item['role']: item['user_count'] for item in queryset_results}
+
+    total_users = sum(role_counts.values())
+    admin_count = role_counts.get(User.Role.ADMIN, 0)
+    teacher_count = role_counts.get(User.Role.TEACHER, 0)
+    student_count = role_counts.get(User.Role.STUDENT, 0)
+
+    # Separate users in Python (no new queries)
+    teachers = [user for user in all_users if user.role == User.Role.TEACHER]
+    students = [user for user in all_users if user.role == User.Role.STUDENT]
+
+    context.update({
+        'total': total_users,
+        'admin_count': admin_count,
+        'teacher_count': teacher_count,
+        'student_count': student_count,
+        'teachers': teachers,
+        'students': students,
+    })
+
+    # === 2. Extra Curricular Activities ===
+    extra_activities = models.ExtraCurricularActivity.objects.all()
+    context.update({
+        'extra_activities': extra_activities,
+        'extra_activity_count': extra_activities.count(),
+        'limited_activities': extra_activities[:3],
+    })
+
+    # === 3. Academic Levels ===
+    levels = models.AcademicLevel.objects.all().order_by('-pk')
+    limited_levels = levels[:3]
+    context.update({
+        'levels': levels,
+        'level_count': levels.count(),
+        'limited_levels': limited_levels,
+        'capacity_remaining': [
+            level.capacity_remaining for level in limited_levels
+            if level.capacity_remaining is not None
+        ],
+    })
+
+    # === 4. Subjects ===
+    subjects = models.Subject.objects.all()
+    context.update({
+        'subjects': subjects,
+        'subject_count': subjects.count(),
+        'limited_subjects': subjects[:3],
+    })
+
+    # # === 5. Streams ===
+    # streams = Stream.objects.all().order_by('-pk')
+    # context.update({
+    #     'streams': streams,
+    #     'stream_count': streams.count(),
+    #     'limited_streams': streams[:3],
+    # })
+
+    # # === 6. Live Classes ===
+    # live_classes = LiveClass.objects.all().order_by('-pk')
+    # context.update({
+    #     'live_classes': live_classes,
+    #     'live_class_count': live_classes.count(),
+    #     'limited_live_classes': live_classes[:3],
+    # })
+
+    # # === 7. Videos ===
+    # videos = Video.objects.all().order_by('-pk')
+    # context.update({
+    #     'videos': videos,
+    #     'video_count': videos.count(),
+    #     'limited_videos': videos[:3],
+    # })
+
+    return render(request, 'dashboard/index.html', context)
 
 
 
